@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Chatbot {
     private String name;
+    private String[] text = new String[100];
+    private int count = 0;
 
     public Chatbot(String name) {
         this.name = name;
@@ -16,7 +18,15 @@ public class Chatbot {
         String command = scanner.nextLine();
 
         while (!command.equals("bye")) {
-            System.out.println(command);
+            if (command.equals("list")) {
+                for (int i = 0; i < this.count; i++) {
+                    System.out.println(i + 1 + ". " + this.text[i]);
+                }
+            } else {
+                System.out.println(command);
+                this.text[this.count] = command;
+                this.count++;
+            }
             System.out.println("--------------------------------------");
             command = scanner.nextLine();
         }
