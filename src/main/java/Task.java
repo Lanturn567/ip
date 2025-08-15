@@ -10,6 +10,10 @@ public class Task {
         this.done = true;
     }
 
+    public void markUndone() {
+        this.done = false;
+    }
+
     public String getName() {
         return this.name;
     }
