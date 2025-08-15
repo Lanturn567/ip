@@ -1,7 +1,39 @@
-Hello from
- ____        _        
-|  _ \ _   _| | _____ 
-| | | | | | | |/ / _ \
-| |_| | |_| |   <  __/
-|____/ \__,_|_|\_\___|
-
+--------------------------------------
+Hello, I am Lanturn! :D
+What can I do for you today?
+--------------------------------------
+Adding Task: Suck to list! :D
+Now there are 1 tasks!
+--------------------------------------
+Adding Task: Suck More to list! :D
+Now there are 2 tasks!
+--------------------------------------
+Adding Task: Suck More More to list! :D
+Now there are 3 tasks!
+--------------------------------------
+Adding Task: Suck More More More to list! :D
+Now there are 4 tasks!
+--------------------------------------
+1. [T][ ] Suck
+2. [T][ ] Suck More
+3. [D][ ] Suck More More (by: Sunday Night)
+4. [E][ ] Suck More More More (from: Wednesday to: Friday)
+--------------------------------------
+Ok! Marking Task: Suck More as done!
+--------------------------------------
+Ok! Marking Task: Suck More More as done!
+--------------------------------------
+1. [T][ ] Suck
+2. [T][X] Suck More
+3. [D][X] Suck More More (by: Sunday Night)
+4. [E][ ] Suck More More More (from: Wednesday to: Friday)
+--------------------------------------
+Ok! Marking Task: Suck More More as undone!
+--------------------------------------
+1. [T][ ] Suck
+2. [T][X] Suck More
+3. [D][ ] Suck More More (by: Sunday Night)
+4. [E][ ] Suck More More More (from: Wednesday to: Friday)
+--------------------------------------
+Goodbye! Hope to see you again! :D
+--------------------------------------
