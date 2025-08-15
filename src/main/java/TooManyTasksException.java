@@ -4,4 +4,8 @@ public class TooManyTasksException extends DukeException{
     public TooManyTasksException() {
         super(TooManyTasksException.msg);
     }
+
+    public TooManyTasksException(String msg) {
+        super(msg);
+    }
 }

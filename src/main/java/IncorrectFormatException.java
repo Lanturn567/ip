@@ -4,4 +4,8 @@ public class IncorrectFormatException extends DukeException {
     public IncorrectFormatException() {
         super(IncorrectFormatException.msg);
     }
+
+    public IncorrectFormatException(String msg) {
+        super(msg);
+    }
 }

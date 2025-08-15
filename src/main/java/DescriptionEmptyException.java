@@ -4,4 +4,8 @@ public class DescriptionEmptyException extends DukeException{
     public DescriptionEmptyException() {
         super(DescriptionEmptyException.msg);
     }
+
+    public DescriptionEmptyException(String msg) {
+        super(msg);
+    }
 }

@@ -11,31 +11,34 @@ Now there are 2 tasks!
 Adding Task: Suck More More to list! :D
 Now there are 3 tasks!
 --------------------------------------
-Adding Task: Suck More More More to list! :D
+Adding Task: Suck Even More to list! :D
 Now there are 4 tasks!
 --------------------------------------
 1. [T][ ] Suck
 2. [T][ ] Suck More
-3. [D][ ] Suck More More (by: Sunday Night)
-4. [E][ ] Suck More More More (from: Wednesday to: Friday)
+3. [D][ ] Suck More More (by: Sunday night)
+4. [E][ ] Suck Even More (from: Wednesday to: Friday)
+--------------------------------------
+Boo... Format is "mark/unmark <number> "... D:
+--------------------------------------
+Boo... I'm sorry, but that task is not in the list... D:
 --------------------------------------
 Ok! Marking Task: Suck More as done!
 --------------------------------------
 Ok! Marking Task: Suck More More as done!
 --------------------------------------
-1. [T][ ] Suck
-2. [T][X] Suck More
-3. [D][X] Suck More More (by: Sunday Night)
-4. [E][ ] Suck More More More (from: Wednesday to: Friday)
---------------------------------------
 Ok! Marking Task: Suck More More as undone!
 --------------------------------------
-Removing Task: Suck More from list! D:
+Boo... Format is "remove <number> "... D:
+--------------------------------------
+Boo... I'm sorry, but that task is not in the list... D:
+--------------------------------------
+Removing Task: Suck from list! D:
 Now there are 3 tasks!
 --------------------------------------
-1. [T][ ] Suck
-2. [D][ ] Suck More More (by: Sunday Night)
-3. [E][ ] Suck More More More (from: Wednesday to: Friday)
+1. [T][X] Suck More
+2. [D][ ] Suck More More (by: Sunday night)
+3. [E][ ] Suck Even More (from: Wednesday to: Friday)
 --------------------------------------
 Goodbye! Hope to see you again! :D
 --------------------------------------

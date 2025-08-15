@@ -18,24 +18,22 @@ public class Chatbot {
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
 
-        while (!command.equals("bye")) {
+        while (true) {
+            CommandType type = CommandType.fromInput(command);
+            if (type == CommandType.BYE) {
+                break;
+            }
+
             try {
-                if (command.equals("list")) {
-                    listTasks();
-                } else if (command.startsWith("mark")) {
-                    markTask(command, true);
-                } else if (command.startsWith("unmark")) {
-                    markTask(command, false);
-                } else if (command.startsWith("remove")) {
-                    removeTask(command);
-                } else if (command.startsWith("todo")) {
-                    addTodo(command);
-                } else if (command.startsWith("deadline")) {
-                    addDeadline(command);
-                } else if (command.startsWith("event")) {
-                    addEvent(command);
-                } else {
-                    throw new IncorrectFormatException();
+                switch (type) {
+                    case LIST -> listTasks();
+                    case MARK -> markTask(command, true);
+                    case UNMARK -> markTask(command, false);
+                    case REMOVE -> removeTask(command);
+                    case TODO -> addTodo(command);
+                    case DEADLINE -> addDeadline(command);
+                    case EVENT -> addEvent(command);
+                    case UNKNOWN -> throw new IncorrectFormatException();
                 }
             } catch (DukeException e) {
                 System.out.println(e.getMessage());
@@ -61,8 +59,19 @@ public class Chatbot {
     }
 
     private void markTask(String command, boolean done) throws DukeException {
-        int num = Integer.parseInt(command.split(" ")[1]) - 1;
-        if (num < 0 || num >= tasks.size()) {
+        String[] parts = command.trim().split("\\s+");
+        // Check if there is a second part
+        if (parts.length < 2) {
+            throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
+        }
+        int num;
+        try {
+            num = Integer.parseInt(parts[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
+        }
+        // Check if number is within range
+        if (num < 0 || num >= this.tasks.size()) {
             throw new TaskNotFoundException();
         }
         Task curr = tasks.get(num);
@@ -123,7 +132,18 @@ public class Chatbot {
     }
 
     private void removeTask(String command) throws DukeException {
-        int num = Integer.parseInt(command.split(" ")[1]) - 1;
+        String[] parts = command.trim().split("\\s+");
+        // Check if there is a second part
+        if (parts.length < 2) {
+            throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
+        }
+        int num;
+        try {
+            num = Integer.parseInt(parts[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
+        }
+        // Check if number is within range
         if (num < 0 || num >= this.tasks.size()) {
             throw new TaskNotFoundException();
         }

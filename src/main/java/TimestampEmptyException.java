@@ -4,4 +4,8 @@ public class TimestampEmptyException extends DukeException{
     public TimestampEmptyException() {
         super(TimestampEmptyException.msg);
     }
+
+    public TimestampEmptyException(String msg) {
+        super(msg);
+    }
 }

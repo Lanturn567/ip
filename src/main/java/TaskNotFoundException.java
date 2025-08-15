@@ -4,4 +4,8 @@ public class TaskNotFoundException extends DukeException{
     public TaskNotFoundException() {
         super(TaskNotFoundException.msg);
     }
+
+    public TaskNotFoundException(String msg) {
+        super(msg);
+    }
 }

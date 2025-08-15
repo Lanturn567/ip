@@ -4,4 +4,8 @@ public class ListEmptyException extends DukeException{
     public ListEmptyException() {
         super(ListEmptyException.msg);
     }
+
+    public ListEmptyException(String msg) {
+        super(msg);
+    }
 }
