@@ -1,9 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Chatbot {
     private String name;
-    private Task[] tasks = new Task[100];
-    private int count = 0;
+    private ArrayList<Task> tasks = new ArrayList<>();
 
     public Chatbot(String name) {
         this.name = name;
@@ -14,6 +14,7 @@ public class Chatbot {
         System.out.println("Hello, I am " + this.name + "! :D");
         System.out.println("What can I do for you today?");
         System.out.println("--------------------------------------");
+
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
 
@@ -25,6 +26,8 @@ public class Chatbot {
                     markTask(command, true);
                 } else if (command.startsWith("unmark")) {
                     markTask(command, false);
+                } else if (command.startsWith("remove")) {
+                    removeTask(command);
                 } else if (command.startsWith("todo")) {
                     addTodo(command);
                 } else if (command.startsWith("deadline")) {
@@ -49,20 +52,20 @@ public class Chatbot {
     // --- Abstracted methods ---
 
     private void listTasks() throws DukeException {
-        if (this.tasks.length == 0) {
+        if (tasks.isEmpty()) {
             throw new ListEmptyException();
         }
-        for (int i = 0; i < this.count; i++) {
-            System.out.println((i + 1) + ". " + this.tasks[i]);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println((i + 1) + ". " + tasks.get(i));
         }
     }
 
     private void markTask(String command, boolean done) throws DukeException {
         int num = Integer.parseInt(command.split(" ")[1]) - 1;
-        if (num < 0 || num >= this.tasks.length) {
+        if (num < 0 || num >= tasks.size()) {
             throw new TaskNotFoundException();
         }
-        Task curr = this.tasks[num];
+        Task curr = tasks.get(num);
         if (done) {
             curr.markDone();
             System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
@@ -72,7 +75,7 @@ public class Chatbot {
         }
     }
 
-    private void addTodo(String command) throws DukeException{
+    private void addTodo(String command) throws DukeException {
         String desc = command.substring(command.indexOf(" ") + 1);
         if (desc.isEmpty()) {
             throw new DescriptionEmptyException();
@@ -111,12 +114,22 @@ public class Chatbot {
     }
 
     private void addTask(Task task) throws DukeException {
-        if (count >= 100) {
+        if (tasks.size() >= 100) {
             throw new TooManyTasksException();
         }
-        this.tasks[this.count] = task;
-        this.count++;
+        tasks.add(task); // Add to the end of the ArrayList
         System.out.println("Adding Task: " + task.getName() + " to list! :D");
-        System.out.println("Now there are " + this.count + " tasks!");
+        System.out.println("Now there are " + tasks.size() + " tasks!");
+    }
+
+    private void removeTask(String command) throws DukeException {
+        int num = Integer.parseInt(command.split(" ")[1]) - 1;
+        if (num < 0 || num >= this.tasks.size()) {
+            throw new TaskNotFoundException();
+        }
+        Task task = this.tasks.get(num);
+        tasks.remove(task);
+        System.out.println("Removing Task: " + task.getName() + " from list! D:");
+        System.out.println("Now there are " + tasks.size() + " tasks!");
     }
 }

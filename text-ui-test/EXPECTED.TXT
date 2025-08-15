@@ -30,10 +30,12 @@ Ok! Marking Task: Suck More More as done!
 --------------------------------------
 Ok! Marking Task: Suck More More as undone!
 --------------------------------------
+Removing Task: Suck More from list! D:
+Now there are 3 tasks!
+--------------------------------------
 1. [T][ ] Suck
-2. [T][X] Suck More
-3. [D][ ] Suck More More (by: Sunday Night)
-4. [E][ ] Suck More More More (from: Wednesday to: Friday)
+2. [D][ ] Suck More More (by: Sunday Night)
+3. [E][ ] Suck More More More (from: Wednesday to: Friday)
 --------------------------------------
 Goodbye! Hope to see you again! :D
 --------------------------------------
