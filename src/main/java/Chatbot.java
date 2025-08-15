@@ -18,23 +18,28 @@ public class Chatbot {
         String command = scanner.nextLine();
 
         while (!command.equals("bye")) {
-            if (command.equals("list")) {
-                listTasks();
-            } else if (command.startsWith("mark")) {
-                markTask(command, true);
-            } else if (command.startsWith("unmark")) {
-                markTask(command, false);
-            } else if (command.startsWith("todo")) {
-                addTodo(command);
-            } else if (command.startsWith("deadline")) {
-                addDeadline(command);
-            } else if (command.startsWith("event")) {
-                addEvent(command);
-            } else {
-                System.out.println("Invalid format specified... D:");
+            try {
+                if (command.equals("list")) {
+                    listTasks();
+                } else if (command.startsWith("mark")) {
+                    markTask(command, true);
+                } else if (command.startsWith("unmark")) {
+                    markTask(command, false);
+                } else if (command.startsWith("todo")) {
+                    addTodo(command);
+                } else if (command.startsWith("deadline")) {
+                    addDeadline(command);
+                } else if (command.startsWith("event")) {
+                    addEvent(command);
+                } else {
+                    throw new IncorrectFormatException();
+                }
+            } catch (DukeException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                System.out.println("--------------------------------------");
+                command = scanner.nextLine();
             }
-            System.out.println("--------------------------------------");
-            command = scanner.nextLine();
         }
 
         System.out.println("Goodbye! Hope to see you again! :D");
@@ -43,14 +48,20 @@ public class Chatbot {
 
     // --- Abstracted methods ---
 
-    private void listTasks() {
+    private void listTasks() throws DukeException {
+        if (this.tasks.length == 0) {
+            throw new ListEmptyException();
+        }
         for (int i = 0; i < this.count; i++) {
             System.out.println((i + 1) + ". " + this.tasks[i]);
         }
     }
 
-    private void markTask(String command, boolean done) {
+    private void markTask(String command, boolean done) throws DukeException {
         int num = Integer.parseInt(command.split(" ")[1]) - 1;
+        if (num < 0 || num >= this.tasks.length) {
+            throw new TaskNotFoundException();
+        }
         Task curr = this.tasks[num];
         if (done) {
             curr.markDone();
@@ -61,30 +72,48 @@ public class Chatbot {
         }
     }
 
-    private void addTodo(String command) {
+    private void addTodo(String command) throws DukeException{
         String desc = command.substring(command.indexOf(" ") + 1);
+        if (desc.isEmpty()) {
+            throw new DescriptionEmptyException();
+        }
         addTask(new Todo(desc));
     }
 
-    private void addDeadline(String command) {
+    private void addDeadline(String command) throws DukeException {
         int firstSpace = command.indexOf(" ");
         int firstSlash = command.indexOf(" /by ");
         String desc = command.substring(firstSpace + 1, firstSlash);
+        if (desc.isEmpty()) {
+            throw new DescriptionEmptyException();
+        }
         String by = command.substring(firstSlash + 5);
+        if (by.isEmpty()) {
+            throw new TimestampEmptyException();
+        }
         addTask(new Deadline(desc, by));
     }
 
-    private void addEvent(String command) {
+    private void addEvent(String command) throws DukeException {
         int firstSpace = command.indexOf(" ");
         int fromSlash = command.indexOf(" /from ");
         int toSlash = command.indexOf(" /to ");
         String desc = command.substring(firstSpace + 1, fromSlash);
+        if (desc.isEmpty()) {
+            throw new DescriptionEmptyException();
+        }
         String start = command.substring(fromSlash + 7, toSlash);
         String end = command.substring(toSlash + 5);
+        if (start.isEmpty() || end.isEmpty()) {
+            throw new TimestampEmptyException();
+        }
         addTask(new Event(desc, start, end));
     }
 
-    private void addTask(Task task) {
+    private void addTask(Task task) throws DukeException {
+        if (count >= 100) {
+            throw new TooManyTasksException();
+        }
         this.tasks[this.count] = task;
         this.count++;
         System.out.println("Adding Task: " + task.getName() + " to list! :D");

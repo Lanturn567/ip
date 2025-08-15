@@ -1,4 +1,7 @@
-package PACKAGE_NAME;
+public class ListEmptyException extends DukeException{
+    private static String msg = "The list is currently empty... Add some tasks! :D";
 
-public class ListEmptyException {
+    public ListEmptyException() {
+        super(ListEmptyException.msg);
+    }
 }

@@ -1,4 +1,7 @@
-package PACKAGE_NAME;
+public class TaskNotFoundException extends DukeException{
+    private static String msg = "Boo... I'm sorry, but that task is not in the list... D:";
 
-public class TaskNotFoundException {
+    public TaskNotFoundException() {
+        super(TaskNotFoundException.msg);
+    }
 }

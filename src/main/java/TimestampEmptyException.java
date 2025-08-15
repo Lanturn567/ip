@@ -1,4 +1,7 @@
-package PACKAGE_NAME;
+public class TimestampEmptyException extends DukeException{
+    private static String msg = "Boo... The timestamp of a task cannot be empty...";
 
-public class TimestampEmptyException {
+    public TimestampEmptyException() {
+        super(TimestampEmptyException.msg);
+    }
 }
