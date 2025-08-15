@@ -28,7 +28,7 @@ public class Chatbot {
                 curr.markDone();
                 System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
             } else if (command.startsWith("unmark")) {
-                int num = Integer.parseInt(command.split(" ")[1]);
+                int num = Integer.parseInt(command.split(" ")[1]) - 1;
                 Task curr = this.tasks[num];
                 curr.markUndone();
                 System.out.println("Ok! Marking Task: " + curr.getName() + " as undone!");
