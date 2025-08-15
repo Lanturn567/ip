@@ -10,6 +10,10 @@ public class Task {
         this.done = true;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     @Override
     public String toString() {
         String complete = this.done ? "X" : " ";

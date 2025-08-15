@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Chatbot {
     private String name;
-    private String[] text = new String[100];
+    private Task[] tasks = new Task[100];
     private int count = 0;
 
     public Chatbot(String name) {
@@ -20,11 +20,22 @@ public class Chatbot {
         while (!command.equals("bye")) {
             if (command.equals("list")) {
                 for (int i = 0; i < this.count; i++) {
-                    System.out.println(i + 1 + ". " + this.text[i]);
+                    System.out.println(i + 1 + ". " + this.tasks[i]);
                 }
+            } else if (command.startsWith("mark")) {
+                int num = Integer.parseInt(command.split(" ")[1]);
+                Task curr = this.tasks[num];
+                curr.markDone();
+                System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
+            } else if (command.startsWith("unmark")) {
+                int num = Integer.parseInt(command.split(" ")[1]);
+                Task curr = this.tasks[num];
+                curr.markUndone();
+                System.out.println("Ok! Marking Task: " + curr.getName() + " as undone!");
             } else {
                 System.out.println(command);
-                this.text[this.count] = command;
+                Task task = new Task(command);
+                this.tasks[this.count] = task;
                 this.count++;
             }
             System.out.println("--------------------------------------");
