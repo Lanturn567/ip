@@ -23,7 +23,7 @@ public class Chatbot {
                     System.out.println(i + 1 + ". " + this.tasks[i]);
                 }
             } else if (command.startsWith("mark")) {
-                int num = Integer.parseInt(command.split(" ")[1]);
+                int num = Integer.parseInt(command.split(" ")[1]) - 1;
                 Task curr = this.tasks[num];
                 curr.markDone();
                 System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
