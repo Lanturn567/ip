@@ -18,7 +18,7 @@ Now there are 4 tasks!
 1. [T][ ] Suck
 2. [T][ ] Suck More
 3. [D][ ] Suck More More (by: Sunday night)
-4. [E][ ] Suck Even More (from: 12/02/2022 18:00 to: 01/10/2021 14:00)
+4. [E][ ] Suck Even More (from: Feb 12 2022 18:00 to: Oct 01 2021 14:00)
 --------------------------------------
 Boo... Format is "mark/unmark <number> "... D:
 --------------------------------------
@@ -39,7 +39,7 @@ Now there are 3 tasks!
 --------------------------------------
 1. [T][X] Suck More
 2. [D][ ] Suck More More (by: Sunday night)
-3. [E][ ] Suck Even More (from: 12/02/2022 18:00 to: 01/10/2021 14:00)
+3. [E][ ] Suck Even More (from: Feb 12 2022 18:00 to: Oct 01 2021 14:00)
 --------------------------------------
 Goodbye! Hope to see you again! :D
 --------------------------------------

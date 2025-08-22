@@ -41,7 +41,7 @@ public class Deadline extends Task{
             // Create LocalDateTime
             LocalDateTime dateTime = LocalDateTime.of(year, month, day, hour, minute);
             this.deadline = dateTime;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
             this.by = dateTime.format(formatter);
         } catch (IncorrectFormatException | DateTimeException e) {
             //do nothing

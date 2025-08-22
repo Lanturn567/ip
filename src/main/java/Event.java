@@ -34,7 +34,7 @@ public class Event extends Task{
             // Create LocalDateTime
             LocalDateTime dateTime = LocalDateTime.of(year, month, day, hour, minute);
             this.startDate = dateTime;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
             this.start = dateTime.format(formatter);
         } catch (IncorrectFormatException | DateTimeException e) {
             //do nothing
@@ -60,7 +60,7 @@ public class Event extends Task{
             // Create LocalDateTime
             LocalDateTime dateTime = LocalDateTime.of(year, month, day, hour, minute);
             this.endDate = dateTime;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
             this.end = dateTime.format(formatter);
         } catch (IncorrectFormatException | DateTimeException e) {
             //do nothing

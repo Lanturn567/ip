@@ -4,6 +4,7 @@ public enum CommandType {
     UNMARK,
     REMOVE,
     TODO,
+    DUE,
     DEADLINE,
     EVENT,
     BYE,
@@ -34,6 +35,9 @@ public enum CommandType {
         }
         if (lower.equals("bye")) {
             return BYE;
+        }
+        if (lower.equals("due")) {
+            return DUE;
         }
         return UNKNOWN;
     }
