@@ -123,6 +123,9 @@ public class Chatbot {
     }
 
     private void addDeadline(String command) throws DukeException {
+        if (!command.contains("/by")) {
+            throw new IncorrectFormatException();
+        }
         int firstSpace = command.indexOf(" ");
         int firstSlash = command.indexOf(" /by ");
         String desc = command.substring(firstSpace + 1, firstSlash);
@@ -137,6 +140,9 @@ public class Chatbot {
     }
 
     private void addEvent(String command) throws DukeException {
+        if (!command.contains("/from") || !command.contains("/to")) {
+            throw new IncorrectFormatException();
+        }
         int firstSpace = command.indexOf(" ");
         int fromSlash = command.indexOf(" /from ");
         int toSlash = command.indexOf(" /to ");
