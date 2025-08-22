@@ -6,12 +6,12 @@ import java.util.ArrayList;
 
 public class Chatbot {
     private String name;
-    private ArrayList<Task> tasks = new ArrayList<>();
+    private TaskList tasks = new TaskList();
 
     public Chatbot(String name) {
         this.name = name;
         try {
-            Save.read(this.tasks);
+            Save.read(this.tasks.getTasks());
             System.out.println("Welcome back!!! :D");
         } catch (FileNotFoundException e) {
             System.out.println("Welcome, new user! :D");
@@ -43,27 +43,27 @@ public class Chatbot {
                     }
                     case MARK -> {
                         markTask(command, true);
-                        Save.write(this.tasks);
+                        Save.write(this.tasks.getTasks());
                     }
                     case UNMARK -> {
                         markTask(command, false);
-                        Save.write(this.tasks);
+                        Save.write(this.tasks.getTasks());
                     }
                     case REMOVE -> {
                         removeTask(command);
-                        Save.write(this.tasks);
+                        Save.write(this.tasks.getTasks());
                     }
                     case TODO -> {
                         addTodo(command);
-                        Save.write(this.tasks);
+                        Save.write(this.tasks.getTasks());
                     }
                     case DEADLINE -> {
                         addDeadline(command);
-                        Save.write(this.tasks);
+                        Save.write(this.tasks.getTasks());
                     }
                     case EVENT -> {
                         addEvent(command);
-                        Save.write(this.tasks);
+                        Save.write(this.tasks.getTasks());
                     }
                     case UNKNOWN -> {
                         throw new IncorrectFormatException();
@@ -84,12 +84,13 @@ public class Chatbot {
     // --- Abstracted methods ---
 
     private void listTasksByDeadline() throws DukeException {
-        if (tasks.isEmpty()) {
+        ArrayList<Task> tasklist = this.tasks.getTasks();
+        if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
         LocalDate today = LocalDate.now();
         int count = 0;
-        for (Task task : tasks) {
+        for (Task task : tasklist) {
             if (task instanceof Deadline) {
                 Deadline d = (Deadline) task;
                 if (!d.getDone() && d.getDeadline().toLocalDate().equals(today)) {
@@ -104,16 +105,21 @@ public class Chatbot {
     }
 
     private void listTasks() throws DukeException {
-        if (tasks.isEmpty()) {
+        ArrayList<Task> tasklist = this.tasks.getTasks();
+        if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " + tasks.get(i));
+        for (int i = 0; i < tasklist.size(); i++) {
+            System.out.println((i + 1) + ". " + tasklist.get(i));
         }
     }
 
     private void markTask(String command, boolean done) throws DukeException {
         String[] parts = command.trim().split("\\s+");
+        ArrayList<Task> tasklist = this.tasks.getTasks();
+        if (tasklist.isEmpty()) {
+            throw new ListEmptyException();
+        }
         // Check if there is a second part
         if (parts.length < 2) {
             throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
@@ -125,10 +131,10 @@ public class Chatbot {
             throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
         }
         // Check if number is within range
-        if (num < 0 || num >= this.tasks.size()) {
+        if (num < 0 || num >= tasklist.size()) {
             throw new TaskNotFoundException();
         }
-        Task curr = tasks.get(num);
+        Task curr = tasklist.get(num);
         if (done) {
             curr.markDone();
             System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
@@ -202,16 +208,21 @@ public class Chatbot {
     }
 
     private void addTask(Task task) throws DukeException {
-        if (tasks.size() >= 100) {
+        ArrayList<Task> tasklist = this.tasks.getTasks();
+        if (tasklist.size() >= 100) {
             throw new TooManyTasksException();
         }
-        tasks.add(task); // Add to the end of the ArrayList
+        tasklist.add(task); // Add to the end of the ArrayList
         System.out.println("Adding Task: " + task.getName() + " to list! :D");
-        System.out.println("Now there are " + tasks.size() + " tasks!");
+        System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 
     private void removeTask(String command) throws DukeException {
         String[] parts = command.trim().split("\\s+");
+        ArrayList<Task> tasklist = this.tasks.getTasks();
+        if (tasklist.isEmpty()) {
+            throw new ListEmptyException();
+        }
         // Check if there is a second part
         if (parts.length < 2) {
             throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
@@ -223,12 +234,12 @@ public class Chatbot {
             throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
         }
         // Check if number is within range
-        if (num < 0 || num >= this.tasks.size()) {
+        if (num < 0 || num >= tasklist.size()) {
             throw new TaskNotFoundException();
         }
-        Task task = this.tasks.get(num);
-        tasks.remove(task);
+        Task task = tasklist.get(num);
+        tasklist.remove(task);
         System.out.println("Removing Task: " + task.getName() + " from list! D:");
-        System.out.println("Now there are " + tasks.size() + " tasks!");
+        System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 }
