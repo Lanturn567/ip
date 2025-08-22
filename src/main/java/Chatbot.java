@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -36,6 +37,9 @@ public class Chatbot {
                 switch (type) {
                     case LIST -> {
                         listTasks();
+                    }
+                    case DUE -> {
+                        listTasksByDeadline();
                     }
                     case MARK -> {
                         markTask(command, true);
@@ -78,6 +82,26 @@ public class Chatbot {
     }
 
     // --- Abstracted methods ---
+
+    private void listTasksByDeadline() throws DukeException {
+        if (tasks.isEmpty()) {
+            throw new ListEmptyException();
+        }
+        LocalDate today = LocalDate.now();
+        int count = 0;
+        for (Task task : tasks) {
+            if (task instanceof Deadline) {
+                Deadline d = (Deadline) task;
+                if (!d.getDone() && d.getDeadline().toLocalDate().equals(today)) {
+                    count++;
+                    System.out.println(count + ". " + d);
+                }
+            }
+        }
+        if (count == 0) {
+            System.out.println("Yay! No tasks due today! Yay! :D");
+        }
+    }
 
     private void listTasks() throws DukeException {
         if (tasks.isEmpty()) {
@@ -123,32 +147,57 @@ public class Chatbot {
     }
 
     private void addDeadline(String command) throws DukeException {
+        if (!command.contains("/by")) {
+            throw new IncorrectFormatException();
+        }
+
         int firstSpace = command.indexOf(" ");
-        int firstSlash = command.indexOf(" /by ");
-        String desc = command.substring(firstSpace + 1, firstSlash);
+        int byIndex = command.indexOf(" /by ");
+
+        // Check indices
+        if (firstSpace == -1 || byIndex == -1 || byIndex <= firstSpace) {
+            throw new IncorrectFormatException();
+        }
+
+        String desc = command.substring(firstSpace + 1, byIndex).trim();
         if (desc.isEmpty()) {
             throw new DescriptionEmptyException();
         }
-        String by = command.substring(firstSlash + 5);
+
+        String by = command.substring(byIndex + 5).trim(); // everything after "/by "
         if (by.isEmpty()) {
             throw new TimestampEmptyException();
         }
+
         addTask(new Deadline(desc, by));
     }
 
     private void addEvent(String command) throws DukeException {
+        if (!command.contains("/from") || !command.contains("/to")) {
+            throw new IncorrectFormatException();
+        }
+
         int firstSpace = command.indexOf(" ");
-        int fromSlash = command.indexOf(" /from ");
-        int toSlash = command.indexOf(" /to ");
-        String desc = command.substring(firstSpace + 1, fromSlash);
+        int fromIndex = command.indexOf(" /from ");
+        int toIndex = command.indexOf(" /to ");
+
+        // Check indices
+        if (firstSpace == -1 || fromIndex == -1 || toIndex == -1
+                || fromIndex <= firstSpace || toIndex <= fromIndex) {
+            throw new IncorrectFormatException();
+        }
+
+        String desc = command.substring(firstSpace + 1, fromIndex).trim();
         if (desc.isEmpty()) {
             throw new DescriptionEmptyException();
         }
-        String start = command.substring(fromSlash + 7, toSlash);
-        String end = command.substring(toSlash + 5);
+
+        String start = command.substring(fromIndex + 7, toIndex).trim(); // after "/from "
+        String end = command.substring(toIndex + 5).trim();               // after "/to "
         if (start.isEmpty() || end.isEmpty()) {
             throw new TimestampEmptyException();
         }
+
         addTask(new Event(desc, start, end));
     }
 

@@ -4,6 +4,7 @@ public enum CommandType {
     UNMARK,
     REMOVE,
     TODO,
+    DUE,
     DEADLINE,
     EVENT,
     BYE,
@@ -11,14 +12,33 @@ public enum CommandType {
 
     public static CommandType fromInput(String input) {
         String lower = input.toLowerCase();
-        if (lower.equals("list")) return LIST;
-        if (lower.startsWith("mark")) return MARK;
-        if (lower.startsWith("unmark")) return UNMARK;
-        if (lower.startsWith("remove")) return REMOVE;
-        if (lower.startsWith("todo")) return TODO;
-        if (lower.startsWith("deadline")) return DEADLINE;
-        if (lower.startsWith("event")) return EVENT;
-        if (lower.equals("bye")) return BYE;
+        if (lower.equals("list")) {
+            return LIST;
+        }
+        if (lower.startsWith("mark")) {
+            return MARK;
+        }
+        if (lower.startsWith("unmark")) {
+            return UNMARK;
+        }
+        if (lower.startsWith("remove")) {
+            return REMOVE;
+        }
+        if (lower.startsWith("todo")) {
+            return TODO;
+        }
+        if (lower.startsWith("deadline")) {
+            return DEADLINE;
+        }
+        if (lower.startsWith("event")) {
+            return EVENT;
+        }
+        if (lower.equals("bye")) {
+            return BYE;
+        }
+        if (lower.equals("due")) {
+            return DUE;
+        }
         return UNKNOWN;
     }
 }
