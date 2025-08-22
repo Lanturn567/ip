@@ -82,7 +82,7 @@ public class Chatbot {
 
     // --- Abstracted methods ---
 
-    private void listTasksByDeadline() throws DukeException {
+    public void listTasksByDeadline() throws DukeException {
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
@@ -103,7 +103,7 @@ public class Chatbot {
         }
     }
 
-    private void listTasks() throws DukeException {
+    public void listTasks() throws DukeException {
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
@@ -113,7 +113,7 @@ public class Chatbot {
         }
     }
 
-    private void markTask(String command, boolean done) throws DukeException {
+    public void markTask(String command, boolean done) throws DukeException {
         String[] parts = command.trim().split("\\s+");
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
@@ -143,7 +143,7 @@ public class Chatbot {
         }
     }
 
-    private void addTodo(String command) throws DukeException {
+    public void addTodo(String command) throws DukeException {
         String desc = command.substring(command.indexOf(" ") + 1);
         if (desc.isEmpty()) {
             throw new DescriptionEmptyException();
@@ -151,7 +151,7 @@ public class Chatbot {
         addTask(new Todo(desc));
     }
 
-    private void addDeadline(String command) throws DukeException {
+    public void addDeadline(String command) throws DukeException {
         if (!command.contains("/by")) {
             throw new IncorrectFormatException();
         }
@@ -177,7 +177,7 @@ public class Chatbot {
         addTask(new Deadline(desc, by));
     }
 
-    private void addEvent(String command) throws DukeException {
+    public void addEvent(String command) throws DukeException {
         if (!command.contains("/from") || !command.contains("/to")) {
             throw new IncorrectFormatException();
         }
@@ -206,7 +206,7 @@ public class Chatbot {
         addTask(new Event(desc, start, end));
     }
 
-    private void addTask(Task task) throws DukeException {
+    public void addTask(Task task) throws DukeException {
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.size() >= 100) {
             throw new TooManyTasksException();
@@ -216,7 +216,7 @@ public class Chatbot {
         System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 
-    private void removeTask(String command) throws DukeException {
+    public void removeTask(String command) throws DukeException {
         String[] parts = command.trim().split("\\s+");
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
