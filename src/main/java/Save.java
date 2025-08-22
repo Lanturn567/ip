@@ -10,31 +10,41 @@ import java.util.Scanner;
 public class Save {
     private static String filePath = "./data/duke.txt";
 
-    public static void read(ArrayList<Task> to) {
+    public static void read(ArrayList<Task> to) throws FileNotFoundException {
         File file = new File(Save.filePath);
-        try {
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNext()) {
-                String line = scanner.nextLine();
-                try {
-                    to.add(Save.unserialize(line));
-                } catch (IncorrectFormatException e) {
-                    System.out.println("Data corrupted. D:");
-                }
+        Scanner scanner = new Scanner(file);
+        while (scanner.hasNext()) {
+            String line = scanner.nextLine();
+            try {
+                to.add(Save.unserialize(line));
+            } catch (IncorrectFormatException e) {
+                System.out.println("Data corrupted. D:");
             }
-        } catch (FileNotFoundException f) {
-            System.out.println("File not found! D:");
         }
     }
 
     public static void write(ArrayList<Task> from) {
         File file = new File(Save.filePath);
-        try (FileWriter writer = new FileWriter(file)) {
-            for (Task t : from) {
-                try {
-                    writer.write(Save.serialize(t));
-                } catch (IncorrectFormatException e) {
-                    System.out.println("Error in serializing.. D:");
+        File parentDir = file.getParentFile(); // get parent directory
+
+        try {
+            // Create directory if it doesn't exist
+            if (parentDir != null && !parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
+            // Create the file if it doesn't exist
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            try (FileWriter writer = new FileWriter(file)) {
+                for (Task t : from) {
+                    try {
+                        writer.write(Save.serialize(t) + System.lineSeparator());
+                    } catch (IncorrectFormatException e) {
+                        System.out.println("Error in serializing.. D:");
+                    }
                 }
             }
         } catch (IOException e) {
@@ -56,7 +66,10 @@ public class Save {
     }
 
     public static Task unserialize(String s) throws IncorrectFormatException {
-        String[] elems = s.split(" | ");
+        String[] elems = s.split(" \\| ");
+        for (String elem: elems) {
+            System.out.println(elem);
+        }
         Task task;
         if (s.startsWith("D")) {
             task = new Deadline(elems[2], elems[3]);

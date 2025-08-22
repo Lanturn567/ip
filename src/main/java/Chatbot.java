@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -7,7 +9,12 @@ public class Chatbot {
 
     public Chatbot(String name) {
         this.name = name;
-        Save.read(this.tasks);
+        try {
+            Save.read(this.tasks);
+            System.out.println("Welcome back!!! :D");
+        } catch (FileNotFoundException e) {
+            System.out.println("Welcome, new user! :D");
+        }
     }
 
     public void run() {
