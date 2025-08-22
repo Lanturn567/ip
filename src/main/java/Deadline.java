@@ -1,6 +1,7 @@
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class Deadline extends Task{
     private String by;
@@ -13,6 +14,10 @@ public class Deadline extends Task{
 
     public String getBy() {
         return this.by;
+    }
+
+    public LocalDateTime getDeadline() {
+        return this.deadline;
     }
 
     public void convertToDate(String by) {
@@ -38,7 +43,7 @@ public class Deadline extends Task{
             this.deadline = dateTime;
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             this.by = dateTime.format(formatter);
-        } catch (Exception e) {
+        } catch (IncorrectFormatException | DateTimeException e) {
             //do nothing
         }
     }

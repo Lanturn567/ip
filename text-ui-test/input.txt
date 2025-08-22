@@ -1,7 +1,7 @@
 todo Suck
 todo Suck More
 deadline Suck More More /by Sunday night
-event Suck Even More /from Wednesday /to Friday
+event Suck Even More /from 2022/2/12 18:00 /to 2021/10/1 14:00
 list
 mark
 mark 5
