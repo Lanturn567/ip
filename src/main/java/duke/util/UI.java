@@ -1,3 +1,5 @@
+package duke.util;
+
 public class UI {
 
     public static void showWelcome(String name) {

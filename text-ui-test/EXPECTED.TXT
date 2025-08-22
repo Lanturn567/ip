@@ -1,18 +1,18 @@
 Welcome, new user! :D
 --------------------------------------
-Hello, I am Lanturn! :D
+Hello, I am duke.main.Lanturn! :D
 What can I do for you today?
 --------------------------------------
-Adding Task: Suck to list! :D
+Adding duke.task.Task: Suck to list! :D
 Now there are 1 tasks!
 --------------------------------------
-Adding Task: Suck More to list! :D
+Adding duke.task.Task: Suck More to list! :D
 Now there are 2 tasks!
 --------------------------------------
-Adding Task: Suck More More to list! :D
+Adding duke.task.Task: Suck More More to list! :D
 Now there are 3 tasks!
 --------------------------------------
-Adding Task: Suck Even More to list! :D
+Adding duke.task.Task: Suck Even More to list! :D
 Now there are 4 tasks!
 --------------------------------------
 1. [T][ ] Suck
@@ -24,17 +24,17 @@ Boo... Format is "mark/unmark <number> "... D:
 --------------------------------------
 Boo... I'm sorry, but that task is not in the list... D:
 --------------------------------------
-Ok! Marking Task: Suck More as done!
+Ok! Marking duke.task.Task: Suck More as done!
 --------------------------------------
-Ok! Marking Task: Suck More More as done!
+Ok! Marking duke.task.Task: Suck More More as done!
 --------------------------------------
-Ok! Marking Task: Suck More More as undone!
+Ok! Marking duke.task.Task: Suck More More as undone!
 --------------------------------------
 Boo... Format is "remove <number> "... D:
 --------------------------------------
 Boo... I'm sorry, but that task is not in the list... D:
 --------------------------------------
-Removing Task: Suck from list! D:
+Removing duke.task.Task: Suck from list! D:
 Now there are 3 tasks!
 --------------------------------------
 1. [T][X] Suck More

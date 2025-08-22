@@ -1,4 +1,8 @@
-import java.io.File;
+package duke.util;
+
+import duke.exception.*;
+import duke.task.*;
+
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -132,10 +136,10 @@ public class Chatbot {
         Task curr = tasklist.get(num);
         if (done) {
             curr.markDone();
-            System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
+            System.out.println("Ok! Marking duke.task.Task: " + curr.getName() + " as done!");
         } else {
             curr.markUndone();
-            System.out.println("Ok! Marking Task: " + curr.getName() + " as undone!");
+            System.out.println("Ok! Marking duke.task.Task: " + curr.getName() + " as undone!");
         }
     }
 
@@ -208,7 +212,7 @@ public class Chatbot {
             throw new TooManyTasksException();
         }
         tasklist.add(task); // Add to the end of the ArrayList
-        System.out.println("Adding Task: " + task.getName() + " to list! :D");
+        System.out.println("Adding duke.task.Task: " + task.getName() + " to list! :D");
         System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 
@@ -234,7 +238,7 @@ public class Chatbot {
         }
         Task task = tasklist.get(num);
         tasklist.remove(task);
-        System.out.println("Removing Task: " + task.getName() + " from list! D:");
+        System.out.println("Removing duke.task.Task: " + task.getName() + " from list! D:");
         System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 }

@@ -1,8 +1,12 @@
+package duke.task;
+
+import duke.exception.IncorrectFormatException;
+
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Event extends Task{
+public class Event extends Task {
     private String start;
     private String end;
     private LocalDateTime startDate;

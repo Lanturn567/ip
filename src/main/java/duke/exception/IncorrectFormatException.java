@@ -1,3 +1,5 @@
+package duke.exception;
+
 public class IncorrectFormatException extends DukeException {
     private static String msg = "Boo... I'm sorry, but I do not know what that means D:";
 

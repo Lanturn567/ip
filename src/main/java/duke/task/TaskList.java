@@ -1,3 +1,10 @@
+package duke.task;
+
+import duke.exception.DukeException;
+import duke.exception.ListEmptyException;
+import duke.exception.TaskNotFoundException;
+import duke.exception.TooManyTasksException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -21,7 +28,7 @@ public class TaskList {
             throw new TooManyTasksException();
         }
         tasks.add(task);
-        System.out.println("Adding Task: " + task.getName() + " to list! :D");
+        System.out.println("Adding duke.task.Task: " + task.getName() + " to list! :D");
         System.out.println("Now there are " + tasks.size() + " tasks!");
     }
 
@@ -30,7 +37,7 @@ public class TaskList {
             throw new TaskNotFoundException();
         }
         Task task = tasks.remove(index);
-        System.out.println("Removing Task: " + task.getName() + " from list! D:");
+        System.out.println("Removing duke.task.Task: " + task.getName() + " from list! D:");
         System.out.println("Now there are " + tasks.size() + " tasks!");
     }
 
@@ -41,10 +48,10 @@ public class TaskList {
         Task task = tasks.get(index);
         if (done) {
             task.markDone();
-            System.out.println("Ok! Marking Task: " + task.getName() + " as done!");
+            System.out.println("Ok! Marking duke.task.Task: " + task.getName() + " as done!");
         } else {
             task.markUndone();
-            System.out.println("Ok! Marking Task: " + task.getName() + " as undone!");
+            System.out.println("Ok! Marking duke.task.Task: " + task.getName() + " as undone!");
         }
     }
 

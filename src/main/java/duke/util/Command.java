@@ -1,3 +1,5 @@
+package duke.util;
+
 public class Command {
     private String name;
     private Action action;
