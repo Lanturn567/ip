@@ -19,10 +19,7 @@ public class Chatbot {
     }
 
     public void run() {
-        System.out.println("--------------------------------------");
-        System.out.println("Hello, I am " + this.name + "! :D");
-        System.out.println("What can I do for you today?");
-        System.out.println("--------------------------------------");
+        UI.showWelcome(this.name);
 
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
@@ -76,9 +73,7 @@ public class Chatbot {
                 command = scanner.nextLine();
             }
         }
-
-        System.out.println("Goodbye! Hope to see you again! :D");
-        System.out.println("--------------------------------------");
+        UI.showGoodbye();
     }
 
     // --- Abstracted methods ---
