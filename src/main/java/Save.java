@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Save {
-    private static String filePath = "./data/duke.txt";
+    private static String filePath = "." + File.separator + "data" + File.separator + "duke.txt";
 
     public static void read(ArrayList<Task> to) throws FileNotFoundException {
         File file = new File(Save.filePath);
         Scanner scanner = new Scanner(file);
-        while (scanner.hasNext()) {
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             try {
                 to.add(Save.unserialize(line));
@@ -67,9 +67,6 @@ public class Save {
 
     public static Task unserialize(String s) throws IncorrectFormatException {
         String[] elems = s.split(" \\| ");
-        for (String elem: elems) {
-            System.out.println(elem);
-        }
         Task task;
         if (s.startsWith("D")) {
             task = new Deadline(elems[2], elems[3]);
