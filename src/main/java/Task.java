@@ -18,6 +18,10 @@ public class Task {
         return this.name;
     }
 
+    public boolean getDone() {
+        return this.done;
+    }
+
     @Override
     public String toString() {
         String complete = this.done ? "X" : " ";
