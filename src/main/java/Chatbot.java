@@ -7,6 +7,7 @@ public class Chatbot {
 
     public Chatbot(String name) {
         this.name = name;
+        Save.read(this.tasks);
     }
 
     public void run() {
@@ -26,14 +27,36 @@ public class Chatbot {
 
             try {
                 switch (type) {
-                    case LIST -> listTasks();
-                    case MARK -> markTask(command, true);
-                    case UNMARK -> markTask(command, false);
-                    case REMOVE -> removeTask(command);
-                    case TODO -> addTodo(command);
-                    case DEADLINE -> addDeadline(command);
-                    case EVENT -> addEvent(command);
-                    case UNKNOWN -> throw new IncorrectFormatException();
+                    case LIST -> {
+                        listTasks();
+                    }
+                    case MARK -> {
+                        markTask(command, true);
+                        Save.write(this.tasks);
+                    }
+                    case UNMARK -> {
+                        markTask(command, false);
+                        Save.write(this.tasks);
+                    }
+                    case REMOVE -> {
+                        removeTask(command);
+                        Save.write(this.tasks);
+                    }
+                    case TODO -> {
+                        addTodo(command);
+                        Save.write(this.tasks);
+                    }
+                    case DEADLINE -> {
+                        addDeadline(command);
+                        Save.write(this.tasks);
+                    }
+                    case EVENT -> {
+                        addEvent(command);
+                        Save.write(this.tasks);
+                    }
+                    case UNKNOWN -> {
+                        throw new IncorrectFormatException();
+                    }
                 }
             } catch (DukeException e) {
                 System.out.println(e.getMessage());
