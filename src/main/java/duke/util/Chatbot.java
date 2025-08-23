@@ -5,6 +5,7 @@ import duke.task.*;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -61,6 +62,7 @@ public class Chatbot {
             try {
                 switch (type) {
                     case LIST -> listTasks();
+                    case FIND -> find(command);
                     case DUE -> listTasksByDeadline();
                     case MARK -> {
                         markTask(command, true);
@@ -99,6 +101,36 @@ public class Chatbot {
     }
 
     /**
+     * Finds all tasks with descriptions containing the given search string.
+     *
+     * @param command the user command, expected format: {@code "find <keyword>"}
+     * @throws DukeException if the task list is empty or if the command format is invalid
+     */
+    public void find(String command) throws DukeException {
+        ArrayList<Task> tasklist = this.tasks.getTasks();
+        if (tasklist.isEmpty()) {
+            throw new ListEmptyException();
+        }
+
+        String[] elems = command.trim().split("\\s+", 2);
+        if (elems.length < 2 || elems[1].isEmpty()) {
+            throw new IncorrectFormatException("Format is \"find <keyword>\"... D:");
+        }
+
+        String keyword = elems[1];
+        System.out.println("Finding all tasks...");
+        int count = 0;
+        for (Task t : tasklist) {
+            if (t.getName().contains(keyword)) {
+                System.out.println(++count + ". " + t);
+            }
+        }
+        if (count == 0) {
+            System.out.println("No tasks found... D:");
+        }
+    }
+
+    /**
      * Lists all tasks with deadlines due today.
      *
      * @throws DukeException if the task list is empty
@@ -109,6 +141,9 @@ public class Chatbot {
             throw new ListEmptyException();
         }
         LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
+        String formatted = today.format(formatter);
+        System.out.println("Today is " + formatted + "! Here are your due tasks! :D");
         int count = 0;
         for (Task task : tasklist) {
             if (task instanceof Deadline d) {
@@ -167,10 +202,10 @@ public class Chatbot {
         Task curr = tasklist.get(num);
         if (done) {
             curr.markDone();
-            System.out.println("Ok! Marking duke.task.Task: " + curr.getName() + " as done!");
+            System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
         } else {
             curr.markUndone();
-            System.out.println("Ok! Marking duke.task.Task: " + curr.getName() + " as undone!");
+            System.out.println("Ok! Marking Task: " + curr.getName() + " as undone!");
         }
     }
 
@@ -268,7 +303,7 @@ public class Chatbot {
             throw new TooManyTasksException();
         }
         tasklist.add(task);
-        System.out.println("Adding duke.task.Task: " + task.getName() + " to list! :D");
+        System.out.println("Adding Task: " + task.getName() + " to list! :D");
         System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 
@@ -299,7 +334,7 @@ public class Chatbot {
         }
         Task task = tasklist.get(num);
         tasklist.remove(task);
-        System.out.println("Removing duke.task.Task: " + task.getName() + " from list! D:");
+        System.out.println("Removing Task: " + task.getName() + " from list! D:");
         System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 }

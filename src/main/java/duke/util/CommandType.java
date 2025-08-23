@@ -13,6 +13,11 @@ public enum CommandType {
     LIST,
 
     /**
+     * Command to find all tasks with given string.
+     */
+    FIND,
+
+    /**
      * Command to mark a task as done.
      */
     MARK,
@@ -67,6 +72,9 @@ public enum CommandType {
         String lower = input.toLowerCase();
         if (lower.equals("list")) {
             return LIST;
+        }
+        if (lower.startsWith("find")) {
+            return FIND;
         }
         if (lower.startsWith("mark")) {
             return MARK;

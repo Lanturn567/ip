@@ -31,7 +31,7 @@ public class ChatbotTest {
     @Test
     public void testAddTodo() throws DukeException {
         chatbot.addTodo("todo read book");
-        assertTrue(outContent.toString().contains("Adding duke.task.Task: read book"));
+        assertTrue(outContent.toString().contains("Adding Task: read book"));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class ChatbotTest {
         chatbot.addTodo("todo sleep");
         outContent.reset();
         chatbot.removeTask("remove 1");
-        assertTrue(outContent.toString().contains("Removing duke.task.Task: sleep"));
+        assertTrue(outContent.toString().contains("Removing Task: sleep"));
     }
 
     @Test
