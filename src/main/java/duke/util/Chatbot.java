@@ -8,10 +8,30 @@ import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * Represents the main chatbot that interacts with the user.
+ * <p>
+ * The {@code Chatbot} manages a {@link TaskList}, processes user commands,
+ * executes them, and saves the task list to persistent storage.
+ */
 public class Chatbot {
+
+    /**
+     * The name of the chatbot.
+     */
     private String name;
+
+    /**
+     * The list of tasks managed by the chatbot.
+     */
     private TaskList tasks = new TaskList();
 
+    /**
+     * Creates a new {@code Chatbot} with the given name.
+     * Loads any previously saved tasks if available.
+     *
+     * @param name the name of the chatbot
+     */
     public Chatbot(String name) {
         this.name = name;
         try {
@@ -22,6 +42,10 @@ public class Chatbot {
         }
     }
 
+    /**
+     * Starts the chatbot, processes user commands,
+     * and responds until the user exits.
+     */
     public void run() {
         UI.showWelcome(this.name);
 
@@ -36,12 +60,8 @@ public class Chatbot {
 
             try {
                 switch (type) {
-                    case LIST -> {
-                        listTasks();
-                    }
-                    case DUE -> {
-                        listTasksByDeadline();
-                    }
+                    case LIST -> listTasks();
+                    case DUE -> listTasksByDeadline();
                     case MARK -> {
                         markTask(command, true);
                         Save.write(this.tasks.getTasks());
@@ -66,9 +86,7 @@ public class Chatbot {
                         addEvent(command);
                         Save.write(this.tasks.getTasks());
                     }
-                    case UNKNOWN -> {
-                        throw new IncorrectFormatException();
-                    }
+                    case UNKNOWN -> throw new IncorrectFormatException();
                 }
             } catch (DukeException e) {
                 System.out.println(e.getMessage());
@@ -80,8 +98,11 @@ public class Chatbot {
         UI.showGoodbye();
     }
 
-    // --- Abstracted methods ---
-
+    /**
+     * Lists all tasks with deadlines due today.
+     *
+     * @throws DukeException if the task list is empty
+     */
     public void listTasksByDeadline() throws DukeException {
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
@@ -90,8 +111,7 @@ public class Chatbot {
         LocalDate today = LocalDate.now();
         int count = 0;
         for (Task task : tasklist) {
-            if (task instanceof Deadline) {
-                Deadline d = (Deadline) task;
+            if (task instanceof Deadline d) {
                 if (!d.getDone() && d.getDeadline().toLocalDate().equals(today)) {
                     count++;
                     System.out.println(count + ". " + d);
@@ -103,6 +123,11 @@ public class Chatbot {
         }
     }
 
+    /**
+     * Lists all tasks currently stored in the task list.
+     *
+     * @throws DukeException if the task list is empty
+     */
     public void listTasks() throws DukeException {
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
@@ -113,13 +138,20 @@ public class Chatbot {
         }
     }
 
+    /**
+     * Marks or unmarks a task as done based on user input.
+     *
+     * @param command the user command specifying the task number
+     * @param done    {@code true} to mark as done, {@code false} to unmark
+     * @throws DukeException if the task list is empty, the format is incorrect,
+     *                       or the task number is invalid
+     */
     public void markTask(String command, boolean done) throws DukeException {
         String[] parts = command.trim().split("\\s+");
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
-        // Check if there is a second part
         if (parts.length < 2) {
             throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
         }
@@ -129,7 +161,6 @@ public class Chatbot {
         } catch (NumberFormatException e) {
             throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
         }
-        // Check if number is within range
         if (num < 0 || num >= tasklist.size()) {
             throw new TaskNotFoundException();
         }
@@ -143,6 +174,12 @@ public class Chatbot {
         }
     }
 
+    /**
+     * Adds a {@link Todo} task based on user input.
+     *
+     * @param command the user command containing the description
+     * @throws DukeException if the description is empty
+     */
     public void addTodo(String command) throws DukeException {
         String desc = command.substring(command.indexOf(" ") + 1);
         if (desc.isEmpty()) {
@@ -151,6 +188,13 @@ public class Chatbot {
         addTask(new Todo(desc));
     }
 
+    /**
+     * Adds a {@link Deadline} task based on user input.
+     *
+     * @param command the user command containing the description and deadline
+     * @throws DukeException if the format is invalid, the description is empty,
+     *                       or the timestamp is empty
+     */
     public void addDeadline(String command) throws DukeException {
         if (!command.contains("/by")) {
             throw new IncorrectFormatException();
@@ -159,7 +203,6 @@ public class Chatbot {
         int firstSpace = command.indexOf(" ");
         int byIndex = command.indexOf(" /by ");
 
-        // Check indices
         if (firstSpace == -1 || byIndex == -1 || byIndex <= firstSpace) {
             throw new IncorrectFormatException();
         }
@@ -169,7 +212,7 @@ public class Chatbot {
             throw new DescriptionEmptyException();
         }
 
-        String by = command.substring(byIndex + 5).trim(); // everything after "/by "
+        String by = command.substring(byIndex + 5).trim();
         if (by.isEmpty()) {
             throw new TimestampEmptyException();
         }
@@ -177,6 +220,14 @@ public class Chatbot {
         addTask(new Deadline(desc, by));
     }
 
+    /**
+     * Adds an {@link Event} task based on user input.
+     *
+     * @param command the user command containing the description,
+     *                start time, and end time
+     * @throws DukeException if the format is invalid, the description is empty,
+     *                       or timestamps are missing
+     */
     public void addEvent(String command) throws DukeException {
         if (!command.contains("/from") || !command.contains("/to")) {
             throw new IncorrectFormatException();
@@ -186,7 +237,6 @@ public class Chatbot {
         int fromIndex = command.indexOf(" /from ");
         int toIndex = command.indexOf(" /to ");
 
-        // Check indices
         if (firstSpace == -1 || fromIndex == -1 || toIndex == -1
                 || fromIndex <= firstSpace || toIndex <= fromIndex) {
             throw new IncorrectFormatException();
@@ -197,8 +247,8 @@ public class Chatbot {
             throw new DescriptionEmptyException();
         }
 
-        String start = command.substring(fromIndex + 7, toIndex).trim(); // after "/from "
-        String end = command.substring(toIndex + 5).trim();               // after "/to "
+        String start = command.substring(fromIndex + 7, toIndex).trim();
+        String end = command.substring(toIndex + 5).trim();
         if (start.isEmpty() || end.isEmpty()) {
             throw new TimestampEmptyException();
         }
@@ -206,23 +256,35 @@ public class Chatbot {
         addTask(new Event(desc, start, end));
     }
 
+    /**
+     * Adds a task to the task list.
+     *
+     * @param task the task to be added
+     * @throws DukeException if the maximum number of tasks (100) is exceeded
+     */
     public void addTask(Task task) throws DukeException {
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.size() >= 100) {
             throw new TooManyTasksException();
         }
-        tasklist.add(task); // Add to the end of the ArrayList
+        tasklist.add(task);
         System.out.println("Adding duke.task.Task: " + task.getName() + " to list! :D");
         System.out.println("Now there are " + tasklist.size() + " tasks!");
     }
 
+    /**
+     * Removes a task from the task list based on user input.
+     *
+     * @param command the user command specifying the task number
+     * @throws DukeException if the task list is empty, the format is incorrect,
+     *                       or the task number is invalid
+     */
     public void removeTask(String command) throws DukeException {
         String[] parts = command.trim().split("\\s+");
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
-        // Check if there is a second part
         if (parts.length < 2) {
             throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
         }
@@ -232,7 +294,6 @@ public class Chatbot {
         } catch (NumberFormatException e) {
             throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
         }
-        // Check if number is within range
         if (num < 0 || num >= tasklist.size()) {
             throw new TaskNotFoundException();
         }

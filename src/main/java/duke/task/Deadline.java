@@ -6,10 +6,19 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Class representing a deadline task
+ * Has additional field LocalDateTime deadline
+ */
 public class Deadline extends Task {
     private String by;
     private LocalDateTime deadline;
 
+    /**
+     * Constructor for a {@code Deadline}
+     * @param name Name of the task
+     * @param by Date and time by which task is to be completed.
+     */
     public Deadline(String name, String by) {
         super(name);
         this.convertToDate(by);
@@ -23,6 +32,11 @@ public class Deadline extends Task {
         return this.deadline;
     }
 
+    /**
+     * Formats the deadline given into a LocalDateTime object.
+     * Binds field to newly created object.
+     * @param by Deadline by which task is to be completed.
+     */
     public void convertToDate(String by) {
         try {
             this.by = by;
