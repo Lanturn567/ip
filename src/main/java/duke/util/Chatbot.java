@@ -118,7 +118,7 @@ public class Chatbot {
         }
 
         String keyword = elems[1];
-        System.out.println("Finding all tasks...");
+        System.out.println("Searching for tasks...");
         int count = 0;
         for (Task t : tasklist) {
             if (t.getName().contains(keyword)) {
