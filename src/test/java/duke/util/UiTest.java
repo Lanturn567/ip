@@ -6,7 +6,7 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UITest {
+public class UiTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -23,7 +23,7 @@ public class UITest {
 
     @Test
     public void testShowWelcome() {
-        UI.showWelcome("Duke");
+        Ui.showWelcome("Duke");
         String output = outContent.toString();
         assertTrue(output.contains("Hello, I am Duke!"));
         assertTrue(output.contains("What can I do for you today?"));
@@ -32,7 +32,7 @@ public class UITest {
 
     @Test
     public void testShowGoodbye() {
-        UI.showGoodbye();
+        Ui.showGoodbye();
         String output = outContent.toString();
         assertTrue(output.contains("Goodbye! Hope to see you again!"));
         assertTrue(output.contains("--------------------------------------"));

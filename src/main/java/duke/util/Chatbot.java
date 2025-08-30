@@ -48,7 +48,7 @@ public class Chatbot {
      * and responds until the user exits.
      */
     public void run() {
-        UI.showWelcome(this.name);
+        Ui.showWelcome(this.name);
 
         Scanner scanner = new Scanner(System.in);
         String command = scanner.nextLine();
@@ -97,7 +97,50 @@ public class Chatbot {
                 command = scanner.nextLine();
             }
         }
-        UI.showGoodbye();
+        Ui.showGoodbye();
+    }
+
+    public String getResponse(String command) {
+        CommandType type = CommandType.fromInput(command);
+        String wish = "Someting wong. D:";
+        try {
+            switch (type) {
+            case LIST -> wish = listTasks();
+            case FIND -> wish = find(command);
+            case DUE -> wish = listTasksByDeadline();
+            case MARK -> {
+                wish = markTask(command, true);
+                Save.write(this.tasks.getTasks());
+            }
+            case UNMARK -> {
+                wish = markTask(command, false);
+                Save.write(this.tasks.getTasks());
+            }
+            case REMOVE -> {
+                wish = removeTask(command);
+                Save.write(this.tasks.getTasks());
+            }
+            case TODO -> {
+                wish =addTodo(command);
+                Save.write(this.tasks.getTasks());
+            }
+            case DEADLINE -> {
+                wish = addDeadline(command);
+                Save.write(this.tasks.getTasks());
+            }
+            case EVENT -> {
+                wish = addEvent(command);
+                Save.write(this.tasks.getTasks());
+            }
+            case BYE -> {
+                wish = Ui.showGoodbye();
+            }
+            case UNKNOWN -> throw new IncorrectFormatException();
+            }
+        } catch (DukeException e) {
+            wish = e.getMessage();
+        }
+        return wish;
     }
 
     /**
@@ -106,7 +149,8 @@ public class Chatbot {
      * @param command the user command, expected format: {@code "find <keyword>"}
      * @throws DukeException if the task list is empty or if the command format is invalid
      */
-    public void find(String command) throws DukeException {
+    public String find(String command) throws DukeException {
+        StringBuilder wish = new StringBuilder();
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
@@ -118,15 +162,18 @@ public class Chatbot {
         }
 
         String keyword = elems[1];
-        System.out.println("Searching for tasks...");
+        // System.out.println("Searching for tasks...");
         int count = 0;
         for (Task t : tasklist) {
             if (t.getName().contains(keyword)) {
-                System.out.println(++count + ". " + t);
+                String curr = ++count + ". " + t + "\n";
+                wish.append(curr);
             }
         }
         if (count == 0) {
-            System.out.println("No tasks found... D:");
+            return "No tasks found... D:";
+        } else {
+            return wish.toString();
         }
     }
 
@@ -135,7 +182,8 @@ public class Chatbot {
      *
      * @throws DukeException if the task list is empty
      */
-    public void listTasksByDeadline() throws DukeException {
+    public String listTasksByDeadline() throws DukeException {
+        StringBuilder wish = new StringBuilder();
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
@@ -143,18 +191,19 @@ public class Chatbot {
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         String formatted = today.format(formatter);
-        System.out.println("Today is " + formatted + "! Here are your due tasks! :D");
+        wish.append("Today is ").append(formatted).append("! Here are your due tasks! :D\n");
         int count = 0;
         for (Task task : tasklist) {
             if (task instanceof Deadline d) {
                 if (!d.getDone() && d.getDeadline().toLocalDate().equals(today)) {
-                    count++;
-                    System.out.println(count + ". " + d);
+                    wish.append(++count + ". " + d + "\n");
                 }
             }
         }
         if (count == 0) {
-            System.out.println("Yay! No tasks due today! Yay! :D");
+            return "Yay! No tasks due today! Yay! :D";
+        } else {
+            return wish.toString();
         }
     }
 
@@ -163,14 +212,16 @@ public class Chatbot {
      *
      * @throws DukeException if the task list is empty
      */
-    public void listTasks() throws DukeException {
+    public String listTasks() throws DukeException {
+        StringBuilder wish = new StringBuilder();
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
         for (int i = 0; i < tasklist.size(); i++) {
-            System.out.println((i + 1) + ". " + tasklist.get(i));
+            wish.append((i + 1) + ". " + tasklist.get(i) + "\n");
         }
+        return wish.toString();
     }
 
     /**
@@ -181,7 +232,7 @@ public class Chatbot {
      * @throws DukeException if the task list is empty, the format is incorrect,
      *                       or the task number is invalid
      */
-    public void markTask(String command, boolean done) throws DukeException {
+    public String markTask(String command, boolean done) throws DukeException {
         String[] parts = command.trim().split("\\s+");
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
@@ -202,10 +253,10 @@ public class Chatbot {
         Task curr = tasklist.get(num);
         if (done) {
             curr.markDone();
-            System.out.println("Ok! Marking Task: " + curr.getName() + " as done!");
+            return "Ok! Marking Task: " + curr.getName() + " as done!\n";
         } else {
             curr.markUndone();
-            System.out.println("Ok! Marking Task: " + curr.getName() + " as undone!");
+            return "Ok! Marking Task: " + curr.getName() + " as undone!\n";
         }
     }
 
@@ -215,12 +266,12 @@ public class Chatbot {
      * @param command the user command containing the description
      * @throws DukeException if the description is empty
      */
-    public void addTodo(String command) throws DukeException {
+    public String addTodo(String command) throws DukeException {
         String desc = command.substring(command.indexOf(" ") + 1);
         if (desc.isEmpty()) {
             throw new DescriptionEmptyException();
         }
-        addTask(new Todo(desc));
+        return addTask(new Todo(desc));
     }
 
     /**
@@ -230,7 +281,7 @@ public class Chatbot {
      * @throws DukeException if the format is invalid, the description is empty,
      *                       or the timestamp is empty
      */
-    public void addDeadline(String command) throws DukeException {
+    public String addDeadline(String command) throws DukeException {
         if (!command.contains("/by")) {
             throw new IncorrectFormatException();
         }
@@ -252,7 +303,7 @@ public class Chatbot {
             throw new TimestampEmptyException();
         }
 
-        addTask(new Deadline(desc, by));
+        return addTask(new Deadline(desc, by));
     }
 
     /**
@@ -263,7 +314,7 @@ public class Chatbot {
      * @throws DukeException if the format is invalid, the description is empty,
      *                       or timestamps are missing
      */
-    public void addEvent(String command) throws DukeException {
+    public String addEvent(String command) throws DukeException {
         if (!command.contains("/from") || !command.contains("/to")) {
             throw new IncorrectFormatException();
         }
@@ -272,8 +323,7 @@ public class Chatbot {
         int fromIndex = command.indexOf(" /from ");
         int toIndex = command.indexOf(" /to ");
 
-        if (firstSpace == -1 || fromIndex == -1 || toIndex == -1
-                || fromIndex <= firstSpace || toIndex <= fromIndex) {
+        if (firstSpace == -1 || fromIndex == -1 || toIndex == -1 || fromIndex <= firstSpace || toIndex <= fromIndex) {
             throw new IncorrectFormatException();
         }
 
@@ -288,7 +338,7 @@ public class Chatbot {
             throw new TimestampEmptyException();
         }
 
-        addTask(new Event(desc, start, end));
+        return addTask(new Event(desc, start, end));
     }
 
     /**
@@ -297,14 +347,16 @@ public class Chatbot {
      * @param task the task to be added
      * @throws DukeException if the maximum number of tasks (100) is exceeded
      */
-    public void addTask(Task task) throws DukeException {
+    public String addTask(Task task) throws DukeException {
+        StringBuilder wish = new StringBuilder();
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.size() >= 100) {
             throw new TooManyTasksException();
         }
         tasklist.add(task);
-        System.out.println("Adding Task: " + task.getName() + " to list! :D");
-        System.out.println("Now there are " + tasklist.size() + " tasks!");
+        wish.append("Adding Task: " + task.getName() + " to list! :D\n");
+        wish.append("Now there are " + tasklist.size() + " tasks!\n");
+        return wish.toString();
     }
 
     /**
@@ -314,7 +366,8 @@ public class Chatbot {
      * @throws DukeException if the task list is empty, the format is incorrect,
      *                       or the task number is invalid
      */
-    public void removeTask(String command) throws DukeException {
+    public String removeTask(String command) throws DukeException {
+        StringBuilder wish = new StringBuilder();
         String[] parts = command.trim().split("\\s+");
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
@@ -334,7 +387,8 @@ public class Chatbot {
         }
         Task task = tasklist.get(num);
         tasklist.remove(task);
-        System.out.println("Removing Task: " + task.getName() + " from list! D:");
-        System.out.println("Now there are " + tasklist.size() + " tasks!");
+        wish.append("Removing Task: " + task.getName() + " from list! D:\n");
+        wish.append("Now there are " + tasklist.size() + " tasks!\n");
+        return wish.toString();
     }
 }
