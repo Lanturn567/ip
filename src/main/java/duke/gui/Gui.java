@@ -2,132 +2,60 @@ package duke.gui;
 
 import duke.util.Chatbot;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 
-import javafx.scene.layout.Region;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-
-import duke.gui.DialogBox;
-
+import java.io.IOException;
 
 public class Gui extends Application {
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/furina.jpeg"), 50, 50, false, true);
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/sui.jpg"), 50, 50, false, true);
-
-    private String name = "Lanturn";
-    private ScrollPane scrollPane;
-    private VBox dialogContainer;
-    private TextField userInput;
-    private Button sendButton;
-    private Scene scene;
-    private Label title = new Label(name);
-    private Chatbot lanturn = new Chatbot(name);
+    private static final String BOT_NAME = "Lanturn";
+    private static final double WINDOW_WIDTH = 400.0;
+    private static final double WINDOW_HEIGHT = 600.0;
 
     @Override
     public void start(Stage stage) {
-        //Setting up required components
-        scrollPane = new ScrollPane();
-        dialogContainer = new VBox();
+        try {
+            // Load the FXML file
+            FXMLLoader fxmlLoader = new FXMLLoader(Gui.class.getResource("/view/main-window.fxml"));
 
-        DialogBox box1 = new DialogBox("Hello", userImage);
-        DialogBox box2 = new DialogBox("Next Line", dukeImage);
-        DialogBox box3 = new DialogBox("Final", userImage);
+            // Load the FXML and get the controller
+            MainWindow mainWindow = new MainWindow();
+            fxmlLoader.setController(mainWindow);
 
-        dialogContainer.getChildren().addAll(box1, box2, box3);
+            // Load the scene
+            Scene scene = new Scene(fxmlLoader.load(), WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        scrollPane.setContent(dialogContainer);
+            // Configure the stage
+            stage.setTitle("Lanturn");
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
 
-        userInput = new TextField();
-        sendButton = new Button("Send");
-
-        AnchorPane anchorPane = new AnchorPane();
-        anchorPane.getChildren().addAll(scrollPane, userInput, sendButton);
-
-        VBox mainLayout = new VBox();
-        mainLayout.getChildren().addAll(this.title, anchorPane);
-        stage.setTitle("Duke");
-        stage.setResizable(false);
-        stage.setMinHeight(600.0);
-        stage.setMinWidth(400.0);
-
-        mainLayout.setPrefSize(400.0, 600.0);
-
-        scrollPane.setPrefSize(385, 535);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-        scrollPane.setVvalue(1.0);
-        scrollPane.setFitToWidth(true);
-
-        dialogContainer.setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        userInput.setPrefWidth(325.0);
-
-        sendButton.setPrefWidth(55.0);
-
-        AnchorPane.setTopAnchor(scrollPane, 1.0);
-
-        AnchorPane.setBottomAnchor(sendButton, 1.0);
-        AnchorPane.setRightAnchor(sendButton, 1.0);
-
-        AnchorPane.setLeftAnchor(userInput, 1.0);
-        AnchorPane.setBottomAnchor(userInput, 1.0);
-        scene = new Scene(mainLayout);
-
-        stage.setScene(scene);
-        stage.show();
-
-        stage.setTitle("Duke");
-        stage.setResizable(false);
-        stage.setMinHeight(600.0);
-        stage.setMinWidth(400.0);
-
-        mainLayout.setPrefSize(400.0, 600.0);
-
-        scrollPane.setPrefSize(385, 535);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-        scrollPane.setVvalue(1.0);
-        scrollPane.setFitToWidth(true);
-
-        dialogContainer.setPrefHeight(Region.USE_COMPUTED_SIZE);
-
-        userInput.setPrefWidth(325.0);
-
-        sendButton.setPrefWidth(55.0);
-
-        AnchorPane.setTopAnchor(scrollPane, 1.0);
-
-        AnchorPane.setBottomAnchor(sendButton, 1.0);
-        AnchorPane.setRightAnchor(sendButton, 1.0);
-
-        AnchorPane.setLeftAnchor(userInput, 1.0);
-        AnchorPane.setBottomAnchor(userInput, 1.0);
-
-        sendButton.setOnMouseClicked((event) -> {
-            handleUserInput();
-        });
-        userInput.setOnAction((event) -> {
-            handleUserInput();
-        });
-
-        dialogContainer.heightProperty().addListener((observable) -> scrollPane.setVvalue(1.0));
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Fallback to programmatic UI if FXML fails
+            fallbackToProgrammaticUI(stage);
+        }
     }
 
     /**
-     * Creates a dialog box containing user input, and appends it to
-     * the dialog container. Clears the user input after processing.
+     * Fallback method to create UI programmatically if FXML loading fails
      */
-    private void handleUserInput() {
-        dialogContainer.getChildren().addAll(new DialogBox(userInput.getText(), userImage));
-        userInput.clear();
+    private void fallbackToProgrammaticUI(Stage stage) {
+        // You can keep your original programmatic UI creation here as backup
+        // This would be similar to your original start() method
+        System.err.println("FXML loading failed, falling back to programmatic UI");
+
+        // Create a simple backup UI
+        try {
+            MainWindow mainWindow = new MainWindow();
+            Scene scene = new Scene(mainWindow.getMainLayout(), WINDOW_WIDTH, WINDOW_HEIGHT);
+            stage.setScene(scene);
+            stage.show();
+            mainWindow.initialize(); // Manually call initialize for fallback
+        } catch (Exception e) {
+            System.err.println("Fallback UI also failed: " + e.getMessage());
+        }
     }
 }
