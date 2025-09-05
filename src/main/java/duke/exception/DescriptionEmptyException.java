@@ -8,13 +8,13 @@ public class DescriptionEmptyException extends DukeException {
     /**
      * Default error message when a task description is empty.
      */
-    private static final String msg = "Boo... The description of a task cannot be empty...";
+    private static final String MSG = "Boo... The description of a task cannot be empty...";
 
     /**
      * Creates a {@code DescriptionEmptyException} with the default error message.
      */
     public DescriptionEmptyException() {
-        super(DescriptionEmptyException.msg);
+        super(DescriptionEmptyException.MSG);
     }
 
     /**

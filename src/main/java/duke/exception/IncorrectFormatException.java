@@ -8,7 +8,7 @@ public class IncorrectFormatException extends DukeException {
     /**
      * Default exception message for incorrect format.
      */
-    private static String msg = "Boo... I'm sorry, but I do not know what that means D:";
+    private static final String msg = "Boo... I'm sorry, but I do not know what that means D:";
 
     /**
      * Default constructor for {@code IncorrectFormatException}.

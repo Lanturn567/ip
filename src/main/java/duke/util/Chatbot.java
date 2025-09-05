@@ -62,7 +62,7 @@ public class Chatbot {
             try {
                 switch (type) {
                     case LIST -> listTasks();
-                    case FIND -> find(command);
+                    case FIND -> findTask(command);
                     case DUE -> listTasksByDeadline();
                     case MARK -> {
                         markTask(command, true);
@@ -106,7 +106,7 @@ public class Chatbot {
         try {
             switch (type) {
             case LIST -> wish = listTasks();
-            case FIND -> wish = find(command);
+            case FIND -> wish = findTask(command);
             case DUE -> wish = listTasksByDeadline();
             case MARK -> {
                 wish = markTask(command, true);
@@ -149,7 +149,7 @@ public class Chatbot {
      * @param command the user command, expected format: {@code "find <keyword>"}
      * @throws DukeException if the task list is empty or if the command format is invalid
      */
-    public String find(String command) throws DukeException {
+    public String findTask(String command) throws DukeException {
         StringBuilder wish = new StringBuilder();
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
