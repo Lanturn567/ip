@@ -92,6 +92,19 @@ public class MainWindow {
 
         // Postconditions
         assert userInput.getText().isEmpty() : "User input field should be cleared after sending";
+
+        // Close the app if dukeText is exactly the BYE response
+        String byeMessage = Ui.showGoodbye();
+        if (dukeText.equals(byeMessage)) {
+            javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(
+                    javafx.util.Duration.seconds(2)
+            );
+            delay.setOnFinished(event -> {
+                // Close the application window
+                dialogContainer.getScene().getWindow().hide();
+            });
+            delay.play();
+        }
     }
 
     /**
