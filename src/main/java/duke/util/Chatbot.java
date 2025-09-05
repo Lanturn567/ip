@@ -200,7 +200,6 @@ public class Chatbot {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         String formatted = today.format(formatter);
 
-        StringBuilder wish = new StringBuilder();
         wish.append("Today is ").append(formatted).append("! Here are your due tasks! :D\n");
 
         int count = 0;
@@ -326,7 +325,7 @@ public class Chatbot {
     }
 
     public String addEvent(String command) throws DukeException {
-        assert command.startsWith("event") : "Command must start with 'event'";
+        assert command.startsWith("event") : "Command must start with the word'event'";
         if (!command.contains("/from") || !command.contains("/to")) {
             throw new IncorrectFormatException();
         }
