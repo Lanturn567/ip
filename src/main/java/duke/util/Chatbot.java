@@ -373,7 +373,7 @@ public class Chatbot {
     }
 
     public String removeTask(String command) throws DukeException {
-        assert command.startsWith("remove") : "Command must start with 'remove'";
+        assert command.startsWith("remove") : "Command must start with the word 'remove'";
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
