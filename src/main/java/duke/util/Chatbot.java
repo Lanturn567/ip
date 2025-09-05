@@ -34,6 +34,7 @@ public class Chatbot {
      * @param name the name of the chatbot
      */
     public Chatbot(String name) {
+        assert name != null && !name.isEmpty() : "Chatbot name should not be null or empty";
         this.name = name;
         try {
             Save.read(this.tasks.getTasks());
@@ -41,6 +42,7 @@ public class Chatbot {
         } catch (FileNotFoundException e) {
             System.out.println("Welcome, new user! :D");
         }
+        assert tasks != null : "Task list should be initialized";
     }
 
     /**
@@ -54,6 +56,7 @@ public class Chatbot {
         String command = scanner.nextLine();
 
         while (true) {
+            assert command != null : "Command input should not be null";
             CommandType type = CommandType.fromInput(command);
             if (type == CommandType.BYE) {
                 break;
@@ -101,6 +104,7 @@ public class Chatbot {
     }
 
     public String getResponse(String command) {
+        assert command != null : "Command cannot be null";
         CommandType type = CommandType.fromInput(command);
         String wish = "Someting wong. D:";
         try {
@@ -140,6 +144,7 @@ public class Chatbot {
         } catch (DukeException e) {
             wish = e.getMessage();
         }
+        assert wish != null : "Response message should not be null";
         return wish;
     }
 
@@ -150,7 +155,7 @@ public class Chatbot {
      * @throws DukeException if the task list is empty or if the command format is invalid
      */
     public String findTask(String command) throws DukeException {
-        StringBuilder wish = new StringBuilder();
+        assert command.startsWith("find") : "Find command must start with 'find'";
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
@@ -163,6 +168,7 @@ public class Chatbot {
 
         String keyword = elems[1];
         // System.out.println("Searching for tasks...");
+        StringBuilder wish = new StringBuilder();
         int count = 0;
         for (Task t : tasklist) {
             if (t.getName().contains(keyword)) {
@@ -189,22 +195,24 @@ public class Chatbot {
             throw new ListEmptyException();
         }
         LocalDate today = LocalDate.now();
+        assert today != null : "Today's date should not be null";
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
         String formatted = today.format(formatter);
+
+        StringBuilder wish = new StringBuilder();
         wish.append("Today is ").append(formatted).append("! Here are your due tasks! :D\n");
+
         int count = 0;
         for (Task task : tasklist) {
             if (task instanceof Deadline d) {
+                assert d.getDeadline() != null : "Deadline task must have a deadline";
                 if (!d.getDone() && d.getDeadline().toLocalDate().equals(today)) {
-                    wish.append(++count + ". " + d + "\n");
+                    wish.append(++count).append(". ").append(d).append("\n");
                 }
             }
         }
-        if (count == 0) {
-            return "Yay! No tasks due today! Yay! :D";
-        } else {
-            return wish.toString();
-        }
+        return (count == 0) ? "Yay! No tasks due today! Yay! :D" : wish.toString();
     }
 
     /**
@@ -213,11 +221,11 @@ public class Chatbot {
      * @throws DukeException if the task list is empty
      */
     public String listTasks() throws DukeException {
-        StringBuilder wish = new StringBuilder();
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
+        StringBuilder wish = new StringBuilder();
         for (int i = 0; i < tasklist.size(); i++) {
             wish.append((i + 1) + ". " + tasklist.get(i) + "\n");
         }
@@ -233,14 +241,18 @@ public class Chatbot {
      *                       or the task number is invalid
      */
     public String markTask(String command, boolean done) throws DukeException {
-        String[] parts = command.trim().split("\\s+");
+        assert command.startsWith(done ? "mark" : "unmark")
+                : "Command must start with 'mark' or 'unmark'";
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
+
+        String[] parts = command.trim().split("\\s+");
         if (parts.length < 2) {
             throw new IncorrectFormatException("Boo... Format is \"mark/unmark <number> \"... D:");
         }
+
         int num;
         try {
             num = Integer.parseInt(parts[1]) - 1;
@@ -250,12 +262,17 @@ public class Chatbot {
         if (num < 0 || num >= tasklist.size()) {
             throw new TaskNotFoundException();
         }
+
         Task curr = tasklist.get(num);
+        assert curr != null : "Selected task should not be null";
+
         if (done) {
             curr.markDone();
+            assert curr.getDone() : "Task should be marked as done";
             return "Ok! Marking Task: " + curr.getName() + " as done!\n";
         } else {
             curr.markUndone();
+            assert !curr.getDone() : "Task should be marked as undone";
             return "Ok! Marking Task: " + curr.getName() + " as undone!\n";
         }
     }
@@ -267,6 +284,7 @@ public class Chatbot {
      * @throws DukeException if the description is empty
      */
     public String addTodo(String command) throws DukeException {
+        assert command.startsWith("todo") : "Command must start with 'todo'";
         String desc = command.substring(command.indexOf(" ") + 1);
         if (desc.isEmpty()) {
             throw new DescriptionEmptyException();
@@ -282,6 +300,7 @@ public class Chatbot {
      *                       or the timestamp is empty
      */
     public String addDeadline(String command) throws DukeException {
+        assert command.startsWith("deadline") : "Command must start with 'deadline'";
         if (!command.contains("/by")) {
             throw new IncorrectFormatException();
         }
@@ -306,15 +325,8 @@ public class Chatbot {
         return addTask(new Deadline(desc, by));
     }
 
-    /**
-     * Adds an {@link Event} task based on user input.
-     *
-     * @param command the user command containing the description,
-     *                start time, and end time
-     * @throws DukeException if the format is invalid, the description is empty,
-     *                       or timestamps are missing
-     */
     public String addEvent(String command) throws DukeException {
+        assert command.startsWith("event") : "Command must start with 'event'";
         if (!command.contains("/from") || !command.contains("/to")) {
             throw new IncorrectFormatException();
         }
@@ -322,8 +334,8 @@ public class Chatbot {
         int firstSpace = command.indexOf(" ");
         int fromIndex = command.indexOf(" /from ");
         int toIndex = command.indexOf(" /to ");
-
-        if (firstSpace == -1 || fromIndex == -1 || toIndex == -1 || fromIndex <= firstSpace || toIndex <= fromIndex) {
+        if (firstSpace == -1 || fromIndex == -1 || toIndex == -1
+                || fromIndex <= firstSpace || toIndex <= fromIndex) {
             throw new IncorrectFormatException();
         }
 
@@ -348,31 +360,26 @@ public class Chatbot {
      * @throws DukeException if the maximum number of tasks (100) is exceeded
      */
     public String addTask(Task task) throws DukeException {
-        StringBuilder wish = new StringBuilder();
+        assert task != null : "Cannot add a null task";
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.size() >= 100) {
             throw new TooManyTasksException();
         }
         tasklist.add(task);
-        wish.append("Adding Task: " + task.getName() + " to list! :D\n");
-        wish.append("Now there are " + tasklist.size() + " tasks!\n");
-        return wish.toString();
+
+        assert tasklist.contains(task) : "Task should be added to the list";
+
+        return "Adding Task: " + task.getName() + " to list! :D\n"
+                + "Now there are " + tasklist.size() + " tasks!\n";
     }
 
-    /**
-     * Removes a task from the task list based on user input.
-     *
-     * @param command the user command specifying the task number
-     * @throws DukeException if the task list is empty, the format is incorrect,
-     *                       or the task number is invalid
-     */
     public String removeTask(String command) throws DukeException {
-        StringBuilder wish = new StringBuilder();
-        String[] parts = command.trim().split("\\s+");
+        assert command.startsWith("remove") : "Command must start with 'remove'";
         ArrayList<Task> tasklist = this.tasks.getTasks();
         if (tasklist.isEmpty()) {
             throw new ListEmptyException();
         }
+        String[] parts = command.trim().split("\\s+");
         if (parts.length < 2) {
             throw new IncorrectFormatException("Boo... Format is \"remove <number> \"... D:");
         }
@@ -385,10 +392,14 @@ public class Chatbot {
         if (num < 0 || num >= tasklist.size()) {
             throw new TaskNotFoundException();
         }
+
         Task task = tasklist.get(num);
+        assert task != null : "Task to remove should not be null";
+
         tasklist.remove(task);
-        wish.append("Removing Task: " + task.getName() + " from list! D:\n");
-        wish.append("Now there are " + tasklist.size() + " tasks!\n");
-        return wish.toString();
+        assert !tasklist.contains(task) : "Task should be removed from the list";
+
+        return "Removing Task: " + task.getName() + " from list! D:\n"
+                + "Now there are " + tasklist.size() + " tasks!\n";
     }
 }

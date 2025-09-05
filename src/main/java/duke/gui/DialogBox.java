@@ -6,9 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
 
 public class DialogBox extends HBox {
 
@@ -16,6 +14,10 @@ public class DialogBox extends HBox {
     private ImageView displayPicture;
 
     private DialogBox(String message, Image img) {
+        // Preconditions
+        assert message != null : "Message should not be null";
+        assert img != null : "Image should not be null";
+
         text = new Label(message);
         text.setWrapText(true);
         text.setMaxWidth(250); // limit width for bubble effect
@@ -29,6 +31,10 @@ public class DialogBox extends HBox {
         this.setPadding(new Insets(5));
 
         this.getChildren().addAll(displayPicture, text);
+
+        // Postconditions
+        assert this.getChildren().contains(displayPicture);
+        assert this.getChildren().contains(text);
     }
 
     /** User dialog bubble */
@@ -47,6 +53,10 @@ public class DialogBox extends HBox {
                         "-fx-font-size: 14px;"
         );
 
+        // Check correct order: text first, then displayPicture
+        assert db.getChildren().get(0) == db.text : "Text should come before image in user dialog";
+        assert db.getChildren().get(1) == db.displayPicture;
+
         return db;
     }
 
@@ -63,6 +73,10 @@ public class DialogBox extends HBox {
                         "-fx-background-radius: 20;" +
                         "-fx-font-size: 14px;"
         );
+
+        // Check correct order: displayPicture first, then text
+        assert db.getChildren().get(0) == db.displayPicture : "Image should come before text in Duke dialog";
+        assert db.getChildren().get(1) == db.text;
 
         return db;
     }
