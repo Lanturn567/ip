@@ -7,7 +7,7 @@ public class Task {
     /** The task name. */
     private String name;
     /** Whether the task is completed. */
-    private Boolean done = false;
+    private boolean isDone = false;
 
     public Task(String name) {
         this.name = name;
@@ -17,14 +17,14 @@ public class Task {
      * Marks the task as complete.
      */
     public void markDone() {
-        this.done = true;
+        this.isDone = true;
     }
 
     /**
      * Marks the task as uncomplete.
      */
     public void markUndone() {
-        this.done = false;
+        this.isDone = false;
     }
 
     /**
@@ -40,12 +40,12 @@ public class Task {
      * @return Completion of the task.
      */
     public boolean getDone() {
-        return this.done;
+        return this.isDone;
     }
 
     @Override
     public String toString() {
-        String complete = this.done ? "X" : " ";
+        String complete = this.isDone ? "X" : " ";
         return "[" + complete + "] " + this.name;
     }
 }
